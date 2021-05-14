@@ -13,7 +13,7 @@ public class BulletBuffer {
     // 最大弹幕数量
     private static final int MAX_BULLET_BUFFER_NUM = 150;
     // 弹幕最小推送间隔（ms）
-    private static final int PUSH_SCHEDULE = 200;
+    private static final int PUSH_SCHEDULE = 2;
 
     public static BulletBuffer getInstance() {
         return instance;
@@ -60,9 +60,14 @@ public class BulletBuffer {
                 String bullet = getBullet();
                 if (bullet.length() == 0)
                     return;
+                if (WebSocket.onlineCount.get() == 0){
+                    newBullet(bullet);
+                    return;
+                }
+                System.out.println(111);
                 broadcastBullet(bullet);
             }
-        }, PUSH_SCHEDULE);
+        }, 0, PUSH_SCHEDULE);
     }
 
     private void broadcastBullet(String bullet){

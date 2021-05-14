@@ -16,7 +16,7 @@ public class WebSocket {
     // 当前在线的客户端
     public static final Map<String, Session> clients = new ConcurrentHashMap<>();
     // 当前在线连接数
-    private static final AtomicInteger onlineCount = new AtomicInteger(0);
+    public static final AtomicInteger onlineCount = new AtomicInteger(0);
 
     @OnOpen
     public void onOpen(Session session) {
