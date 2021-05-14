@@ -34,7 +34,7 @@ public class BulletScreenController {
     @RequestMapping(value = "/testBullet", method = RequestMethod.GET)
     public void testBullet(@RequestParam("message") String message,@RequestParam("count") String count){
         for (int i = 0; i < Integer.parseInt(count); i++){
-            BulletBuffer.getInstance().newBullet(message.substring(new Random().nextInt(message.length())));
+            BulletBuffer.getInstance().newBullet(new Random().nextInt(10) < 5 ? message.substring(new Random().nextInt(message.length())) : message.substring(0, new Random().nextInt(message.length())));
         }
     }
 

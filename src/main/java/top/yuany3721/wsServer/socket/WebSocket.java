@@ -2,8 +2,13 @@ package top.yuany3721.wsServer.socket;
 
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpSession;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
+import java.lang.reflect.Field;
+import java.net.InetSocketAddress;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -17,16 +22,17 @@ public class WebSocket {
     public static final Map<String, Session> clients = new ConcurrentHashMap<>();
     // 当前在线连接数
     public static final AtomicInteger onlineCount = new AtomicInteger(0);
+    private final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS  ");
 
     @OnOpen
     public void onOpen(Session session) {
         onlineCount.incrementAndGet();
         clients.put(session.getId(), session);
-        System.out.println("有新连接加入：" + session.getId() + "，当前连接数：" + onlineCount.get());
+        System.out.println(format.format(new Date()) + "new connect established：" + session + "\n当前连接数：" + onlineCount.get());
         try {
             session.getBasicRemote().sendText("成功连接弹幕服务器，这是一条测试弹幕");
         } catch (Exception e) {
-            System.out.println("连接确认消息发送失败");
+            System.err.println("连接确认消息发送失败");
             e.printStackTrace();
         }
     }
@@ -35,17 +41,17 @@ public class WebSocket {
     public void onClose(Session session) {
         onlineCount.decrementAndGet(); // 在线数减1
         clients.remove(session.getId());
-        System.out.println("连接" + session.getId() + "关闭：，剩余连接数：" + onlineCount.get());
+        System.out.println(format.format(new Date()) + session + " closed\n剩余连接数：" + onlineCount.get());
     }
 
     @OnMessage
     public void onMessage(String message, Session session) {
-        System.out.println("收到" + session.getId() + "的消息:" + message);
+        System.out.println(format.format(new Date()) + "received from(" + session+ "):" + message);
     }
 
     @OnError
     public void onError(Session session, Throwable error) {
-        System.err.println("WebSocket Error");
+        System.err.println(format.format(new Date()) + "WebSocket Error");
         error.printStackTrace();
     }
 
@@ -60,4 +66,5 @@ public class WebSocket {
             toSession.getAsyncRemote().sendText(message);
         }
     }
+
 }

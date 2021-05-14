@@ -3,6 +3,7 @@ package top.yuany3721.wsServer.util;
 import top.yuany3721.wsServer.socket.WebSocket;
 
 import javax.websocket.Session;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -64,17 +65,20 @@ public class BulletBuffer {
                     newBullet(bullet);
                     return;
                 }
-                System.out.println(111);
-                broadcastBullet(bullet);
+                try {
+                    broadcastBullet(bullet);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }, 0, PUSH_SCHEDULE);
     }
 
-    private void broadcastBullet(String bullet){
+    private void broadcastBullet(String bullet) throws IOException {
         // 广播消息
         for (Map.Entry<String, Session> sessionEntry : WebSocket.clients.entrySet()) {
             Session toSession = sessionEntry.getValue();
-            toSession.getAsyncRemote().sendText(bullet);
+            toSession.getBasicRemote().sendText(bullet);
         }
     }
 }
