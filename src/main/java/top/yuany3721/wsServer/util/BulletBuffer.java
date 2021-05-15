@@ -4,6 +4,7 @@ import top.yuany3721.wsServer.socket.WebSocket;
 
 import javax.websocket.Session;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -14,7 +15,7 @@ public class BulletBuffer {
     // 最大弹幕数量
     private static final int MAX_BULLET_BUFFER_NUM = 150;
     // 弹幕最小推送间隔（ms）
-    private static final int PUSH_SCHEDULE = 2;
+    private static final int PUSH_SCHEDULE = 200;
 
     public static BulletBuffer getInstance() {
         return instance;
@@ -23,6 +24,8 @@ public class BulletBuffer {
     private BulletBuffer(){
         pushBullet();
     }
+
+    private final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS  ");
 
     /**
      * 新建弹幕
@@ -66,6 +69,7 @@ public class BulletBuffer {
                     return;
                 }
                 try {
+                    System.out.println(format.format(new Date()) + "broadcast " + bullet);
                     broadcastBullet(bullet);
                 } catch (IOException e) {
                     e.printStackTrace();
