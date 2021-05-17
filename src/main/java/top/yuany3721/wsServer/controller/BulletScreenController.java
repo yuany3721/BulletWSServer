@@ -26,15 +26,15 @@ public class BulletScreenController {
 
     @ResponseBody
     @RequestMapping(value = "/newBullet", method = RequestMethod.GET)
-    public void newBullet(String message){
-        BulletBuffer.getInstance().newBullet(message);
+    public void newBullet(@RequestParam("message") String message, @RequestParam("qq") String qq){
+        BulletBuffer.getInstance().newBullet(message, Long.parseLong(qq));
     }
 
     @ResponseBody
     @RequestMapping(value = "/testBullet", method = RequestMethod.GET)
-    public void testBullet(@RequestParam("message") String message,@RequestParam("count") String count){
+    public void testBullet(@RequestParam("message") String message, @RequestParam("count") String count, @RequestParam("qq") String qq){
         for (int i = 0; i < Integer.parseInt(count); i++){
-            BulletBuffer.getInstance().newBullet(new Random().nextInt(10) < 5 ? message.substring(new Random().nextInt(message.length())) : message.substring(0, new Random().nextInt(message.length())));
+            BulletBuffer.getInstance().newBullet(new Random().nextInt(10) < 5 ? message.substring(new Random().nextInt(message.length())) : message.substring(0, new Random().nextInt(message.length())), Long.parseLong(qq));
         }
     }
 

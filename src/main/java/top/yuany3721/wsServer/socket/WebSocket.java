@@ -30,7 +30,7 @@ public class WebSocket {
         clients.put(session.getId(), session);
         System.out.println(format.format(new Date()) + "new connect established：" + session + "\n当前连接数：" + onlineCount.get());
         try {
-            session.getBasicRemote().sendText("成功连接弹幕服务器，这是一条测试弹幕");
+            session.getBasicRemote().sendText(session.toString().split("@")[1] + "+-+-+成功连接弹幕服务器，这是一条测试弹幕");
         } catch (Exception e) {
             System.err.println("连接确认消息发送失败");
             e.printStackTrace();
